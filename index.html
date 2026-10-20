@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ง้อเธอนะ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Itim&family=Mali:wght@400;500;600&display=swap">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+/* Layout: one love-note card centered on a blush paper ground; each step is a "page" of the note that swaps in place. Single warm-light look by choice. */
+:root{
+  --ground:#fbe9ec;
+  --paper:#fffaf7;
+  --ink:#4a2433;
+  --soft:#8a5a6b;
+  --rose:#e05a7a;
+  --rose-deep:#b83a5c;
+  --blush:#f7cfd8;
+  --line:#efd3da;
+  --display:"Itim","Mali",system-ui,sans-serif;
+  --body:"Mali","Itim",system-ui,sans-serif;
+  color-scheme:light;
+}
+html,body{height:100%}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:17px;
+  line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:24px;
+  box-sizing:border-box;
+  display:flex;align-items:center;justify-content:center;
+  overflow-x:hidden;
+  background-image:radial-gradient(circle at 15% 20%, #fff3 0 40px, transparent 41px),radial-gradient(var(--line) 1.2px, transparent 1.4px);
+  background-size:auto, 22px 22px;
+}
+*{box-sizing:border-box}
+#bg{position:fixed;inset:0;pointer-events:none;z-index:0}
+.card{
+  position:relative;z-index:1;
+  width:100%;max-width:420px;min-height:520px;
+  background:var(--paper);
+  border-radius:28px;
+  box-shadow:0 1px 0 var(--line),0 20px 50px -20px #b83a5c55;
+  padding:36px 26px 28px;
+  display:flex;flex-direction:column;
+}
+.tape{position:absolute;top:-12px;left:50%;transform:translateX(-50%) rotate(-3deg);width:110px;height:26px;background:#f7cfd8cc;border-radius:3px}
+.step{display:flex;flex-direction:column;gap:18px;flex:1;animation:in .45s ease both}
+.step[hidden]{display:none!important}
+@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.big{font-size:84px;line-height:1;text-align:center;margin-top:8px}
+h1,h2{font-family:var(--display);font-weight:400;margin:0;text-align:center;text-wrap:balance;color:var(--ink)}
+h1{font-size:44px;line-height:1.15}
+h2{font-size:32px;line-height:1.25}
+p{margin:0;text-align:center;color:var(--soft)}
+.note{font-size:15px}
+.grow{flex:1}
+.btns{display:flex;flex-direction:column;gap:12px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+button{
+  font-family:var(--display);font-size:22px;
+  border:0;border-radius:18px;padding:14px 18px;cursor:pointer;
+  background:var(--rose);color:#fff;
+  box-shadow:0 4px 0 var(--rose-deep);
+  transition:transform .12s, box-shadow .12s;
+  -webkit-tap-highlight-color:transparent;
+}
+button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--rose-deep)}
+button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+button.ghost{background:var(--paper);color:var(--rose-deep);box-shadow:0 0 0 2px var(--blush) inset,0 4px 0 var(--blush)}
+button.ghost:active{box-shadow:0 0 0 2px var(--blush) inset,0 1px 0 var(--blush)}
+.mood{display:flex;flex-direction:column;align-items:center;gap:4px;padding:18px 8px}
+.mood span{font-size:44px;line-height:1}
+.letter{background:#fff;border:1.5px dashed var(--blush);border-radius:18px;padding:18px 18px 16px;display:flex;flex-direction:column;gap:6px}
+.letter p{text-align:left;color:var(--ink);font-size:18px}
+.letter .sign{text-align:right;color:var(--soft);font-size:15px;margin-top:6px}
+.gifts{display:flex;flex-direction:column;gap:10px}
+.gift{
+  display:flex;align-items:center;gap:14px;text-align:left;
+  font-family:var(--body);font-size:18px;font-weight:500;
+  background:#fff;color:var(--ink);
+  box-shadow:0 0 0 2px var(--line) inset;padding:12px 16px;border-radius:16px;
+}
+.gift:active{transform:scale(.98);box-shadow:0 0 0 2px var(--rose) inset}
+.gift .e{font-size:28px;width:36px;text-align:center}
+.gift small{display:block;color:var(--soft);font-weight:400;font-size:13px}
+textarea{
+  width:100%;min-height:96px;resize:vertical;
+  font-family:var(--body);font-size:17px;color:var(--ink);
+  background:#fff;border:2px solid var(--line);border-radius:16px;padding:12px 14px;
+}
+textarea:focus{outline:none;border-color:var(--rose)}
+.wish{background:var(--ground);border-radius:20px;padding:22px 16px;text-align:center;display:flex;flex-direction:column;gap:6px;align-items:center}
+.wish .e{font-size:56px;line-height:1}
+.wish strong{font-family:var(--display);font-weight:400;font-size:26px;color:var(--ink);overflow-wrap:anywhere}
+/* final */
+.final-zone{position:relative;min-height:150px}
+#noBtn{transition:transform .25s, left .25s, top .25s}
+/* game */
+.hud{display:flex;justify-content:space-between;font-family:var(--display);font-size:20px;color:var(--rose-deep);font-variant-numeric:tabular-nums}
+.meter{height:12px;background:var(--ground);border-radius:99px;overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--rose);border-radius:99px;transition:width .2s}
+.field{position:relative;flex:1;min-height:280px;background:var(--ground);border-radius:20px;overflow:hidden;touch-action:manipulation}
+.h{position:absolute;font-size:38px;line-height:1;background:none;box-shadow:none;padding:6px;border-radius:50%;animation:pop .25s ease both, bob 1.4s ease-in-out infinite alternate}
+.h:active{transform:scale(.8);box-shadow:none}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+@keyframes bob{to{translate:0 -8px}}
+.burst{position:absolute;pointer-events:none;font-family:var(--display);color:var(--rose-deep);font-size:20px;animation:up .7s ease forwards}
+@keyframes up{to{transform:translateY(-36px);opacity:0}}
+.promise{font-size:15px;color:var(--soft);text-align:center}
+.promise b{color:var(--rose-deep);font-weight:600}
+.dots{display:flex;justify-content:center;gap:6px;margin-top:auto;padding-top:14px}
+.dots i{width:6px;height:6px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--rose);width:18px;border-radius:99px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-height:640px){.big{font-size:64px}h1{font-size:38px}.card{min-height:0}}
+</style>
+
+</head>
+<body>
+<canvas id="bg"></canvas>
+
+<main class="card">
+  <div class="tape"></div>
+
+  <!-- 1 Welcome -->
+  <section class="step" id="s-welcome">
+    <div class="grow"></div>
+    <div class="big">🥺</div>
+    <h1>เธอ...</h1>
+    <p>เค้ามีอะไรจะบอก ขอเวลาแป๊บนึงนะ</p>
+    <div class="grow"></div>
+    <div class="btns"><button id="startBtn">START</button></div>
+  </section>
+
+  <!-- 2 Mood -->
+  <section class="step" id="s-mood" hidden>
+    <div class="big">🫣</div>
+    <h2>ยังโกรธเค้าอยู่ไหม</h2>
+    <p class="note">ตอบตามจริงได้เลย เค้ารับได้</p>
+    <div class="grow"></div>
+    <div class="row">
+      <button class="ghost mood" data-mood="1"><span>😤</span>โกรธ</button>
+      <button class="ghost mood" data-mood="2"><span>😡</span>โกรธมาก</button>
+    </div>
+  </section>
+
+  <!-- 3 Sorry -->
+  <section class="step" id="s-sorry" hidden>
+    <h2 id="sorryTitle">โอเค เค้าเข้าใจ</h2>
+    <div class="letter">
+      <p>เค้าผิดเอง 🥺</p>
+      <p>ต่อไปจะตั้งใจฟังเธอมากกว่านี้</p>
+      <p id="sorryExtra">ไม่ทำให้เธอเสียใจแบบนี้อีกแล้วนะ</p>
+      <p class="sign">— คนที่รักเธอ</p>
+    </div>
+    <div class="grow"></div>
+    <div class="btns"><button id="acceptBtn">รับคำขอโทษ 💌</button></div>
+  </section>
+
+  <!-- 4 Gifts -->
+  <section class="step" id="s-gift" hidden>
+    <h2>เลือกของง้อ 🎁</h2>
+    <p class="note">เลือกได้ 1 อย่าง เค้าจัดให้</p>
+    <div class="gifts">
+      <button class="gift" data-gift="guitar"><span class="e">🎸</span><span>กีตาร์<small>เค้าซื้อให้เลย</small></span></button>
+      <button class="gift" data-gift="food"><span class="e">🍰</span><span>ของกิน<small>อยากกินอะไร เค้าเลี้ยง</small></span></button>
+      <button class="gift" data-gift="want"><span class="e">🛍️</span><span>ของที่อยากได้<small>อันที่เธอเล็งไว้นั่นแหละ</small></span></button>
+      <button class="gift" data-gift="hug"><span class="e">🫂</span><span>กอด<small>กอดแน่นๆ ไม่จำกัดเวลา</small></span></button>
+      <button class="gift" data-gift="custom"><span class="e">✏️</span><span>ขอเอง<small>พิมพ์มาเลย อะไรก็ได้</small></span></button>
+    </div>
+    <div id="customBox" hidden style="display:flex;flex-direction:column;gap:10px">
+      <textarea id="customText" placeholder="อยากได้อะไร พิมพ์ตรงนี้เลย..." maxlength="120"></textarea>
+      <button id="customOk">ขออันนี้แหละ</button>
+    </div>
+  </section>
+
+  <!-- 5 Confirm -->
+  <section class="step" id="s-confirm" hidden>
+    <h2>อันนี้ใช่มั้ย 👀</h2>
+    <div class="wish"><span class="e" id="wishEmoji">🎁</span><strong id="wishName">-</strong><p class="note" id="wishDesc"></p></div>
+    <div class="grow"></div>
+    <div class="row">
+      <button class="ghost" id="changeBtn">เปลี่ยน</button>
+      <button id="confirmBtn">ใช่เลย</button>
+    </div>
+  </section>
+
+  <!-- 6 Final -->
+  <section class="step" id="s-final" hidden>
+    <div class="big" id="finalFace">🥺</div>
+    <h2 id="finalQ">งั้น...ดีกันได้ยัง</h2>
+    <p class="note" id="finalHint">กดดีๆ นะ</p>
+    <div class="grow"></div>
+    <div class="row final-zone" id="finalZone">
+      <button id="noBtn" class="ghost">😤 ยัง</button>
+      <button id="yesBtn">🤍 ได้</button>
+    </div>
+  </section>
+
+  <!-- 7 Mini game -->
+  <section class="step" id="s-game" hidden>
+    <h2>ง้อต่อ! 💪</h2>
+    <p class="note">ช่วยเก็บหัวใจให้ครบ 10 ดวง ใจเธอจะได้อ่อนลง</p>
+    <div class="hud"><span>❤️ <b id="score">0</b>/10</span><span>⏱ <b id="timer">15</b>s</span></div>
+    <div class="meter"><i id="meter"></i></div>
+    <div class="field" id="field"></div>
+  </section>
+
+  <!-- 7b Game result -->
+  <section class="step" id="s-gameDone" hidden>
+    <div class="big" id="gdFace">🥹</div>
+    <h2 id="gdTitle">ใจอ่อนลงนิดนึงแล้วใช่มั้ย</h2>
+    <p id="gdText">เค้าเก็บหัวใจครบแล้วนะ</p>
+    <div class="grow"></div>
+    <div class="btns"><button id="askAgain">ถามอีกครั้งนะ...</button></div>
+  </section>
+
+  <!-- 8 Happy -->
+  <section class="step" id="s-happy" hidden>
+    <div class="grow"></div>
+    <div class="big">🥰</div>
+    <h1>ดีกันแล้ว!</h1>
+    <p>ขอบคุณที่ให้อภัยเค้านะ รักเธอที่สุดเลย ❤️</p>
+    <div class="letter">
+      <p class="promise">เค้าสัญญาว่าจะให้ <b id="happyGift">-</b></p>
+      <p class="promise">แคปหน้าจอนี้เก็บไว้ทวงได้เลย 📸</p>
+    </div>
+    <div class="grow"></div>
+    <div class="btns"><button class="ghost" id="restart">เริ่มใหม่</button></div>
+  </section>
+
+  <div class="dots" id="dots"></div>
+</main>
+
+<script>
+const order=["welcome","mood","sorry","gift","confirm","final","happy"];
+const stepOf={game:"final",gameDone:"final"};
+const $=id=>document.getElementById(id);
+const dots=$("dots");order.forEach(()=>dots.appendChild(document.createElement("i")));
+let current="welcome";
+function go(name){
+  document.querySelectorAll(".step").forEach(s=>s.hidden=true);
+  $("s-"+name).hidden=false;current=name;
+  const idx=order.indexOf(stepOf[name]||name);
+  [...dots.children].forEach((d,i)=>d.classList.toggle("on",i===idx));
+  window.scrollTo({top:0});
+}
+go("welcome");
+
+$("startBtn").onclick=()=>go("mood");
+
+document.querySelectorAll("[data-mood]").forEach(b=>b.onclick=()=>{
+  const m=b.dataset.mood;
+  if(m==="2"){
+    $("sorryTitle").textContent="โกรธมากเลยหรอ 😢";
+    $("sorryExtra").textContent="เค้าขอโทษจริงๆ ขอโทษล้านครั้งเลย ไม่ทำแบบนี้อีกแล้ว";
+    burstHearts(10);
+  }else{
+    $("sorryTitle").textContent="โอเค เค้าเข้าใจ";
+    $("sorryExtra").textContent="ไม่ทำให้เธอเสียใจแบบนี้อีกแล้วนะ";
+  }
+  go("sorry");
+});
+
+$("acceptBtn").onclick=()=>{burstHearts(14);go("gift")};
+
+const gifts={
+  guitar:["🎸","กีตาร์","เลือกตัวที่ชอบมาเลย เค้าซื้อให้"],
+  food:["🍰","ของกิน","อยากกินอะไร บอกมา เค้าเลี้ยงเอง"],
+  want:["🛍️","ของที่อยากได้","อันที่เธอเล็งไว้ เค้าจัดให้"],
+  hug:["🫂","กอด","กอดแน่นๆ จนกว่าเธอจะหายงอน"]
+};
+let chosen=null;
+document.querySelectorAll("[data-gift]").forEach(b=>b.onclick=()=>{
+  const g=b.dataset.gift;
+  if(g==="custom"){$("customBox").hidden=false;$("customText").focus();return}
+  chosen=gifts[g];showConfirm();
+});
+$("customOk").onclick=()=>{
+  const t=$("customText").value.trim();
+  if(!t){$("customText").placeholder="พิมพ์ก่อนน้า อยากได้อะไร 🥺";$("customText").focus();return}
+  chosen=["✏️",t,"เธอขอมาเอง เค้าจัดให้แน่นอน"];showConfirm();
+};
+function showConfirm(){
+  $("wishEmoji").textContent=chosen[0];$("wishName").textContent=chosen[1];$("wishDesc").textContent=chosen[2];
+  go("confirm");
+}
+$("changeBtn").onclick=()=>go("gift");
+$("confirmBtn").onclick=()=>{resetFinal();go("final")};
+
+/* final question */
+let round=0;
+function resetFinal(){
+  const no=$("noBtn");no.style.position="";no.style.left="";no.style.top="";no.style.width="";no.style.zIndex="";no.style.transform="";no.dataset.dodge="0";
+  if(round===0){$("finalQ").textContent="งั้น...ดีกันได้ยัง";$("finalFace").textContent="🥺";$("finalHint").textContent="กดดีๆ นะ"}
+  else{$("finalQ").textContent="ถามอีกที... ดีกันได้ยังน้า";$("finalFace").textContent="🥹";$("finalHint").textContent="รอบที่ "+(round+1)+" แล้วนะ เค้ายังไม่ยอมแพ้"}
+}
+$("yesBtn").onclick=()=>{
+  $("happyGift").textContent=chosen?chosen[0]+" "+chosen[1]:"กอดแน่นๆ 🫂";
+  go("happy");rain();
+};
+const noLines=["ไม่ให้กดหรอก 😝","จับไม่ได้หรอก~","ปุ่มนี้เสียแล้ว กดอีกอันสิ 🤍","ยอมดีๆ เถอะนะ 🥺","พยายามเก่งมาก แต่ไม่ได้หรอก","มีแต่ปุ่ม 🤍 ได้ ที่กดได้นะ"];
+const faces=["😝","😜","🤭","🥺","😳","🥹"];
+function dodge(e){
+  if(e){e.preventDefault();e.stopPropagation()}
+  const no=$("noBtn"),yes=$("yesBtn").getBoundingClientRect();
+  const r=no.getBoundingClientRect();
+  if(no.style.position!=="fixed"){no.style.width=r.width+"px";no.style.left=r.left+"px";no.style.top=r.top+"px";no.style.position="fixed";no.style.zIndex="5";no.offsetWidth}
+  const pad=16,W=innerWidth-r.width-pad,H=innerHeight-r.height-pad;
+  let x,y,tries=0;
+  do{x=pad+Math.random()*(W-pad);y=pad+Math.random()*(H-pad);tries++}
+  while(tries<30&&((Math.abs(x-r.left)<r.width*1.2&&Math.abs(y-r.top)<r.height*1.5)||(x<yes.right+10&&x+r.width>yes.left-10&&y<yes.bottom+10&&y+r.height>yes.top-10)));
+  no.style.left=x+"px";no.style.top=y+"px";
+  const n=+(no.dataset.dodge||0);no.dataset.dodge=n+1;
+  $("finalHint").textContent=noLines[n%noLines.length];
+  $("finalFace").textContent=faces[n%faces.length];
+}
+const noB=$("noBtn");
+noB.addEventListener("pointerenter",e=>{if(e.pointerType==="mouse")dodge(e)});
+noB.addEventListener("pointerdown",dodge);
+noB.addEventListener("touchstart",dodge,{passive:false});
+noB.addEventListener("click",dodge);
+addEventListener("resize",()=>{const no=$("noBtn");if(no.style.position==="fixed"&&current==="final")dodge()});
+
+/* mini game */
+let score=0,time=15,tick=null,spawn=null;
+function startGame(){
+  score=0;time=15;$("score").textContent=0;$("timer").textContent=15;$("meter").style.width="0";
+  const f=$("field");f.innerHTML="";go("game");
+  clearInterval(tick);clearInterval(spawn);
+  spawn=setInterval(addHeart,650);addHeart();addHeart();
+  tick=setInterval(()=>{time--;$("timer").textContent=time;if(time<=0)endGame(false)},1000);
+}
+const hs=["❤️","💖","💗","💕","💘"];
+function addHeart(){
+  const f=$("field");if(f.children.length>6)f.firstChild.remove();
+  const b=document.createElement("button");b.className="h";b.type="button";
+  b.textContent=hs[Math.floor(Math.random()*hs.length)];
+  b.setAttribute("aria-label","เก็บหัวใจ");
+  const w=f.clientWidth-56,h=f.clientHeight-56;
+  b.style.left=Math.max(4,Math.random()*w)+"px";b.style.top=Math.max(4,Math.random()*h)+"px";
+  b.onclick=e=>{
+    score++;$("score").textContent=score;$("meter").style.width=(score*10)+"%";
+    const p=document.createElement("span");p.className="burst";p.textContent="+1";
+    p.style.left=b.style.left;p.style.top=b.style.top;f.appendChild(p);setTimeout(()=>p.remove(),700);
+    b.remove();if(score>=10)endGame(true);
+  };
+  f.appendChild(b);
+  setTimeout(()=>b.isConnected&&b.remove(),1900);
+}
+function endGame(win){
+  clearInterval(tick);clearInterval(spawn);round++;
+  if(win){$("gdFace").textContent="🥹";$("gdTitle").textContent="ใจอ่อนลงนิดนึงแล้วใช่มั้ย";$("gdText").textContent="เก็บหัวใจครบ 10 ดวงแล้วนะ";burstHearts(16)}
+  else{$("gdFace").textContent="😭";$("gdTitle").textContent="ยังไม่ครบ แต่เค้าไม่ยอมแพ้";$("gdText").textContent="ได้ "+score+" ดวง เค้าจะพยายามต่อไปนะ"}
+  setTimeout(()=>go("gameDone"),win?350:0);
+}
+$("askAgain").onclick=()=>{resetFinal();go("final")};
+$("restart").onclick=()=>{round=0;chosen=null;$("customBox").hidden=true;$("customText").value="";go("welcome")};
+
+/* hearts canvas */
+const cv=$("bg"),ctx=cv.getContext("2d");let parts=[],raf=null;
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+function size(){cv.width=innerWidth*devicePixelRatio;cv.height=innerHeight*devicePixelRatio}
+size();addEventListener("resize",size);
+function heart(x,y,s,c,a){ctx.save();ctx.globalAlpha=a;ctx.translate(x,y);ctx.scale(s,s);ctx.fillStyle=c;ctx.beginPath();
+  ctx.moveTo(0,3);ctx.bezierCurveTo(-6,-2,-3,-8,0,-4);ctx.bezierCurveTo(3,-8,6,-2,0,3);ctx.fill();ctx.restore()}
+const cols=["#e05a7a","#f28aa3","#b83a5c","#f7cfd8","#ff6f91"];
+function loop(){
+  ctx.clearRect(0,0,cv.width,cv.height);
+  parts=parts.filter(p=>p.life>0);
+  parts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=p.g;p.life--;p.r+=p.vr;
+    heart(p.x,p.y,p.s,p.c,Math.min(1,p.life/40))});
+  if(parts.length)raf=requestAnimationFrame(loop);else raf=null;
+}
+function kick(){if(!raf)raf=requestAnimationFrame(loop)}
+function burstHearts(n){
+  if(reduce)return;const d=devicePixelRatio,cx=cv.width/2,cy=cv.height*0.45;
+  for(let i=0;i<n;i++){const a=Math.random()*Math.PI*2,sp=(2+Math.random()*4)*d;
+    parts.push({x:cx,y:cy,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-2*d,g:.12*d,s:(1.4+Math.random()*1.6)*d,c:cols[i%cols.length],life:70+Math.random()*30,vr:0})}
+  kick();
+}
+let rainT=null;
+function rain(){
+  if(reduce)return;burstHearts(30);const d=devicePixelRatio;let n=0;clearInterval(rainT);
+  rainT=setInterval(()=>{
+    for(let i=0;i<4;i++)parts.push({x:Math.random()*cv.width,y:-20*d,vx:(Math.random()-.5)*d,vy:(1.5+Math.random()*2.5)*d,g:.01*d,s:(1.5+Math.random()*2.5)*d,c:cols[Math.floor(Math.random()*cols.length)],life:cv.height/(2*d)+60,vr:0});
+    kick();if(++n>60)clearInterval(rainT);
+  },90);
+}
+</script>
+
+</body>
+</html>
